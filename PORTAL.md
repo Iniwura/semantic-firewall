@@ -24,5 +24,8 @@ status: FINALIZED
 source_sha256: 1540415c8e1d6efbe5d59284a9da1adbbf480b9da0fc43ce2894e04babe1b1cb
 runtime: py-genlayer:1.0.0
 consensus_mechanism: gl.eq_principle.strict_eq
-live_readback_verified: TRUE (is_selector_allowed('0x1111...1111', '0xa9059cbb') returned False)
+live_transactions:
+  - register_agent: 0x80f7beed672d23a5755afb890fe64cf6496fae4ae9d37b00707c6069e6a47bc5 (ACCEPTED, MAJORITY_AGREE)
+  - request_clearance: 0x79fa0408d7eea1d544c73c671e282a0988df6504779b05995c4e358f882d8e4d (ACCEPTED, MAJORITY_AGREE)
+explorer_url: https://explorer-studio.genlayer.com/address/0xc8739f5263eD954ca38F41677ecAabe5383595A6
 ```
