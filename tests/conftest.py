@@ -156,6 +156,28 @@ def _ensure_genlayer_module():
 
     gl_mod = types.ModuleType("genlayer")
 
+    class Contract:
+        def __new__(cls, *args, **kwargs):
+            instance = super().__new__(cls)
+            for attr_name, attr_type in getattr(cls, "__annotations__", {}).items():
+                if "TreeMap" in str(attr_type):
+                    setattr(instance, attr_name, TreeMap())
+            return instance
+
+    class _WriteDecorator:
+        def __call__(self, fn):
+            return fn
+
+        def payable(self, fn):
+            return fn
+
+    class PublicNamespace:
+        write = _WriteDecorator()
+
+        @staticmethod
+        def view(fn):
+            return fn
+
     class WebNamespace:
         @staticmethod
         def render(url: str, mode: str = "text") -> str:
@@ -186,6 +208,8 @@ def _ensure_genlayer_module():
         def send(recipient: Address, amount: u256):
             _CURRENT_VM.send(recipient, amount)
 
+    gl_mod.Contract = Contract
+    gl_mod.public = PublicNamespace()
     gl_mod.Address = Address
     gl_mod.u256 = u256
     gl_mod.u64 = u64
@@ -199,6 +223,8 @@ def _ensure_genlayer_module():
     gl_mod.message = MessageProxy()
 
     gl_object = types.SimpleNamespace(
+        Contract=Contract,
+        public=gl_mod.public,
         nondet=gl_mod.nondet,
         eq_principle=gl_mod.eq_principle,
         message=gl_mod.message,

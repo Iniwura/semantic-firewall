@@ -9,11 +9,12 @@ SemanticFirewall is an on-chain prompt injection and execution firewall that val
 primitive_name: SemanticFirewall
 category: Standalone Intelligent Contract
 language: Python (GenVM)
-source_sha256: 6f0c5fa1cdfdab73c356e99822dadf4dc2a1cd970cd69cfec4dc7e251e17c93a
-commit: 96a1540
+source_sha256: 1540415c8e1d6efbe5d59284a9da1adbbf480b9da0fc43ce2894e04babe1b1cb
+contract_address: 0xc8739f5263eD954ca38F41677ecAabe5383595A6
+deployment_tx: 0xa9cc6ea9406ff9ee1b81b8234cf4464cc2fedf2ae24e3b805e843ef49d3267db
 test_count: 12
 test_result: PASS (12 passed in 0.17s)
-target_network: GenLayer Studio Dev (Chain ID: 61997)
+target_network: GenLayer Studio Dev (Chain ID: 61999)
 consensus_model: Strict Equivalence (gl.eq_principle.strict_eq)
 security_invariants:
   - Atomic single-use execution ticket consumption (zero replay tolerance)

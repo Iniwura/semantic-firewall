@@ -85,7 +85,7 @@ class InspectionRecord:
 # Contract: SemanticFirewall
 # ─────────────────────────────────────────────────────────────
 
-class SemanticFirewall:
+class SemanticFirewall(gl.Contract):
     """
     SemanticFirewall: On-Chain Prompt Injection & Execution Firewall for Autonomous Agents.
 
@@ -111,10 +111,6 @@ class SemanticFirewall:
     current_epoch: u64
 
     def __init__(self):
-        self.agents = TreeMap()
-        self.allowed_selectors = TreeMap()
-        self.tickets = TreeMap()
-        self.inspections = TreeMap()
         self.inspection_count = u32(0)
         self.current_epoch = u64(1)
 
@@ -122,6 +118,7 @@ class SemanticFirewall:
     # Public State-Changing Methods
     # ─────────────────────────────────────────────────────────
 
+    @gl.public.write
     def register_agent(
         self,
         charter_hash: str,
@@ -160,6 +157,7 @@ class SemanticFirewall:
             key = f"{str(sender)}:{s}"
             self.allowed_selectors[key] = True
 
+    @gl.public.write
     def request_clearance(
         self,
         trigger_prompt: str,
@@ -218,6 +216,7 @@ class SemanticFirewall:
 
         return insp_id
 
+    @gl.public.write
     def inspect_and_adjudicate(self, inspection_id: int, trigger_prompt_text: str):
         """
         Executes GenLayer validator consensus inspection on the trigger prompt and calldata.
@@ -325,6 +324,7 @@ Respond with ONLY a valid JSON object matching this exact schema:
         self.agents[insp.agent] = agent
         self.inspections[iid] = insp
 
+    @gl.public.write
     def verify_and_consume_ticket(
         self,
         ticket_id: str,
@@ -366,6 +366,7 @@ Respond with ONLY a valid JSON object matching this exact schema:
 
         return True
 
+    @gl.public.write
     def unlock_agent(self, agent_address: str):
         """Allows agent owner to restore an agent locked by the circuit breaker."""
         sender = to_address(gl.message.sender)
@@ -382,6 +383,7 @@ Respond with ONLY a valid JSON object matching this exact schema:
         agent.quarantine_count = u32(0)
         self.agents[ag_addr] = agent
 
+    @gl.public.write
     def advance_epoch(self, steps: int = 1):
         """Permissionless epoch advancement for time simulation and TTL testing."""
         if int(steps) <= 0:
@@ -392,6 +394,7 @@ Respond with ONLY a valid JSON object matching this exact schema:
     # Public View Methods
     # ─────────────────────────────────────────────────────────
 
+    @gl.public.view
     def get_agent(self, agent_address: str) -> dict:
         addr = to_address(agent_address)
         if addr not in self.agents:
@@ -407,6 +410,7 @@ Respond with ONLY a valid JSON object matching this exact schema:
             "registered_epoch": int(a.registered_epoch),
         }
 
+    @gl.public.view
     def get_ticket(self, ticket_id: str) -> dict:
         if ticket_id not in self.tickets:
             raise UserError("Ticket not found")
@@ -421,6 +425,7 @@ Respond with ONLY a valid JSON object matching this exact schema:
             "consumed": t.consumed,
         }
 
+    @gl.public.view
     def get_inspection(self, inspection_id: int) -> dict:
         iid = u32(int(inspection_id))
         if iid not in self.inspections:
@@ -437,6 +442,7 @@ Respond with ONLY a valid JSON object matching this exact schema:
             "submitted_epoch": int(i.submitted_epoch),
         }
 
+    @gl.public.view
     def is_selector_allowed(self, agent_address: str, selector_hex: str) -> bool:
         key = f"{str(to_address(agent_address))}:{selector_hex.strip().lower()}"
         return bool(self.allowed_selectors.get(key, False))
