@@ -10,6 +10,7 @@ primitive_name: SemanticFirewall
 category: Standalone Intelligent Contract
 language: Python (GenVM)
 source_sha256: 6f0c5fa1cdfdab73c356e99822dadf4dc2a1cd970cd69cfec4dc7e251e17c93a
+commit: 96a1540
 test_count: 12
 test_result: PASS (12 passed in 0.17s)
 target_network: GenLayer Studio Dev (Chain ID: 61997)
