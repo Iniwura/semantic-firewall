@@ -129,7 +129,7 @@ class SemanticFirewall(gl.Contract):
         Registers an autonomous agent under an immutable security charter.
         Callable by the agent or its owner.
         """
-        sender = to_address(gl.message.sender)
+        sender = to_address(gl.message.sender_address)
 
         if len(charter_hash) != 64:
             raise UserError("Charter hash must be a 64-character SHA-256 hex string")
@@ -168,7 +168,7 @@ class SemanticFirewall(gl.Contract):
         """
         Submits a transaction clearance request for GenLayer consensus inspection.
         """
-        sender = to_address(gl.message.sender)
+        sender = to_address(gl.message.sender_address)
         target = to_address(target_contract)
 
         if sender not in self.agents:
@@ -369,7 +369,7 @@ Respond with ONLY a valid JSON object matching this exact schema:
     @gl.public.write
     def unlock_agent(self, agent_address: str):
         """Allows agent owner to restore an agent locked by the circuit breaker."""
-        sender = to_address(gl.message.sender)
+        sender = to_address(gl.message.sender_address)
         ag_addr = to_address(agent_address)
 
         if ag_addr not in self.agents:

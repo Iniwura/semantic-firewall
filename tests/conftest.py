@@ -197,8 +197,12 @@ def _ensure_genlayer_module():
 
     class MessageProxy:
         @property
+        def sender_address(self):
+            return _CURRENT_VM.sender_address
+
+        @property
         def sender(self):
-            return _CURRENT_VM.sender
+            return _CURRENT_VM.sender_address
 
         @property
         def value(self):
